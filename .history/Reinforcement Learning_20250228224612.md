@@ -70,7 +70,7 @@ gamma = 0.5  # 定义折扣因子
 # 给定一条序列,计算从某个索引（起始状态）开始到序列最后（终止状态）得到的回报
 def compute_return(start_index, chain, gamma):
     G = 0
-    for i in range(len(chain)-1, -1, len(chain)):
+    for i in reversed(range(start_index, len(chain))):
         G = gamma * G + rewards[chain[i] - 1] #使用reversed先算chain最后一位，每一次都会对其进行乘gamma
     return G
 
