@@ -1,0 +1,84 @@
+## Robot Learning
+
+### Basic Knowledge:
+
+#### 1、Robotics Basic：
+
+姿态表示和转换（欧拉角、四元数、旋转矩阵、SO3）
+
+机器人正逆运动学
+
+林佩群 台大
+
+
+
+#### 2、Automatic Control：
+
+二次规划求解器
+
+PID、MPC、LQR
+
+卡尔曼滤波
+
+ Optimal Control
+
+
+
+#### 3、Planning and Decision-making：
+
+（Hybrid）A* 、RRT*、DWA、PRM
+
+
+
+#### 4、Perception
+
+
+
+
+
+#### 5、Reinforcement Learning:
+
+model-based、Diffusion Model
+
+RLHF、PPO、DPO
+
+
+
+#### 6、Imitation Learning：
+
+ACT、RT、RDT、GR
+
+
+
+#### 7、Simulation：
+
+Mujoco、Isaac Sim/Gym、Gazebo
+
+
+
+#### 8、LLM、Multi-model：
+
+Open-VLA
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
