@@ -22,14 +22,10 @@ def compute_return(start_index, chain, gamma):
         G = gamma * G + rewards[chain[i]-1]
     return G
 
-def compute(P, rewards, gamma, states_num):
-    ''' 利用贝尔曼方程的矩阵形式计算解析解,states_num是MRP的状态数 '''
-    rewards = np.array(rewards).reshape((-1, 1))  #将rewards写成列向量形式
-    value = np.dot(np.linalg.inv(np.eye(states_num, states_num) - gamma * P), rewards)
-    return value
 
-V = compute(P, rewards, gamma, 6)
-print("MRP中每个状态价值分别为\n", V)
-
-
+# 一个状态序列,s1-s2-s3-s6
+chain = [1, 2, 3, 6]
+start_index = 0
+G = compute_return(start_index, chain, gamma)
+print("根据本序列计算得到回报为：%s。" % G)
 
