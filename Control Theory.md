@@ -11,7 +11,7 @@
 (2) 状态空间：
 
 
-$$\begin{aligned}x_{k+1}&=Ax_k+Bu_k\\y_k&=Cx_k\end{aligned}$$
+$$\begin{aligned}x_{k+1}&=Ax_k+Bu_k\y_k&=Cx_k\end{aligned}$$
 
 
 其中$x_{k}$为系统在时刻$k$的状态向量，$u_{k}$为控制输入，$y_{k}$是系统的输出，$A、B、C$为系统的状态矩阵、输入矩阵和输出矩阵 
