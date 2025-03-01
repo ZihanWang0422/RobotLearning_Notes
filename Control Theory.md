@@ -19,7 +19,7 @@ $$\begin{aligned}x_{k+1}&=Ax_k+Bu_k\\y_k&=Cx_k\end{aligned}$$
 (3) 预测模型：
 
 MPC通过系统模型对未来若干时刻的状态进行预测。给定当前时刻$k$的状态$x_{k}$，MPC可以预测未来$N$个时刻的状态和输出：
-$$\hat{x}_{k+1}=Ax_{k}+Bu_{k}\\\\ \hat{y}_{k+1}=C\hat{x}_{k+1}$$
+$$\hat{x}_{k+1}=Ax_{k}+Bu_{k}\\hat{y}_{k+1}=C\hat{x}_{k+1}$$
 
 2、优化问题：
 
