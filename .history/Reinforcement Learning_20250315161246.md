@@ -2,67 +2,11 @@
 
 [Python3 面向对象 | 菜鸟教程](https://www.runoob.com/python3/python3-class.html)
 
-[蘑菇书EasyRL](https://datawhalechina.github.io/easy-rl/#/)
+
 
 ## Chapter 1 Intro
 
-![alt text](image-1.png)
-
-
-
-1.1奖励
-
-由环境给的一种标量的反馈信号（scalar feedback signal），这种信号可显示智能体在某一步采取某个策略的表现如何。强化学习的目的就是最大化智能体可以获得的奖励，智能体在环境里面存在的目 的就是最大化它的期望的累积奖励（expected cumulative reward）。
-
-
-
-1.2 智能体组成部分
-
-- **策略（policy）**：将输入的状态变成可能采取的动作的概率，通常采用随机策略，在学习时可以通过引入一定的随机性来更好地探索环境。
-
-**随机性策略（π函数）**：$\pi(a|s)=p\left(a_{t}=a|s_{t}=s\right)$输入状态s，输出智能体所有动作得概率。
-
-**确定性策略**： 智能体直接采取最有可能的动作，$a^*=\arg\max_a\pi(a\mid s)$
-
-
-
-- **价值函数（value function）**。我们用价值函数来对当前状态进行评估。价值函数用于评估智能体进 入某个状态后，可以对后面的奖励带来多大的影响。价值函数值越大，说明智能体进入这个状态越有利。
-
-  ​
-
-- **模型（model）**。模型表示智能体对环境的状态进行理解，它决定了环境中世界的运行方式。 
-
-  ​
-
-
-
-1.3 智能体类型
-
-* **基于价值的智能体**：显式地学习价值函数，隐式地学习它的策略。策略是其从学到的价值函数里面推算出来的（Q-learning/Sarsa）
-
-
-
-* **基于策略的智能体**：直接学习策略，我们给它一个状态，它就会输出对应动作的概率。（Policy Gradient/PG）
-
-  ​
-
-```python
-import gymnasium as gym
-
-#创建一个env 参数包括场景类型、渲染模式
-env = gym.make("LunarLander-v3", render_mode="human")
-observation, info = env.reset()
-
-#首先设置eposode_over为flase，进入训练循环
-episode_over = False
-while not episode_over:
-    action = env.action_space.sample()  # agent policy that uses the observation and info
-    observation, reward, terminated, truncated, info = env.step(action) #智能体执行动作，智能体从更新后的环境接收到新的观测以及执行动作的奖励；
-
-    episode_over = terminated or truncated
-
-env.close()
-```
+### 1.1
 
 
 
