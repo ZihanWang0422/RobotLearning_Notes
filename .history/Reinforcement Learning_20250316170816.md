@@ -74,7 +74,7 @@ env.close()
 
 已知历史信息（S1, ..., St）时下一个时刻状态为St+1的概率表示成$P(S_{t+1}|S_1,\ldots,S_t)$
 
-2、马尔科夫性质：（**状态转移**）
+2、马尔科夫性质：（状态转移）
 
 当且仅当某时刻的状态只取决于上一时刻的状态时$P(S_{t+1}|S_t)=P(S_{t+1}|S_1,\ldots,S_t)$
 
@@ -212,8 +212,6 @@ $$\langle\mathcal{s},\mathcal{a},P,r,\gamma\rangle$$
 
 $$\begin{aligned}&\mathcal{s}\text{是状态的集合;}\\&\mathcal{a}\text{是动作的集合;}\\&\gamma\text{是折扣因子;}\\&r(s,a)\text{是奖励函数,此时奖励可以同时取决于状态}s\text{和动作}a\text{,在奖励函数只取决于状态}s\text{时,则}\\&\text{退化为}r(s)\mathrm{;}\\&P(s^{\prime}|s,a)\text{是状态转移函数,表示在状态}s\text{执行动作}a\text{之后到达状态}s^{\prime}\text{的概率。}\end{aligned}$$
 
-
-
 2、状态转移：
 
 状态转移：$p\left(s_{t+1}=s^{\prime}\mid s_t=s,a_t=a\right)$
@@ -234,7 +232,7 @@ $\pi(a\mid s)=p\left(a_t=a\mid s_t=s\right)$
 
 （2）策略转化：
 
-对动作进行加权，得到MRP的**状态转移概率**
+对动作进行加权，得到MRP的状态转移概率
 
  $P_\pi\left(s^{\prime}\mid s\right)=\sum_{a\in A}\pi(a\mid s)p\left(s^{\prime}\mid s,a\right)$
 

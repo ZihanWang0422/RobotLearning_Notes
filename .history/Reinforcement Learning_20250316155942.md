@@ -74,7 +74,7 @@ env.close()
 
 已知历史信息（S1, ..., St）时下一个时刻状态为St+1的概率表示成$P(S_{t+1}|S_1,\ldots,S_t)$
 
-2、马尔科夫性质：（**状态转移**）
+2、马尔科夫性质：
 
 当且仅当某时刻的状态只取决于上一时刻的状态时$P(S_{t+1}|S_t)=P(S_{t+1}|S_1,\ldots,S_t)$
 
@@ -151,13 +151,11 @@ print("根据本序列计算得到回报为：%s。" % G)
 
 （1）马尔可夫奖励过程中，一个状态的期望回报（即从这个状态出发的未来累积奖励的期望）被称为这个状态的**价值**（value）。
 
-🙌注意价值是针对某个起始状态t的!!!
-
 （2）所有状态的价值就组成了**价值函数**（value function）**V(s)**，价值函数的输入为某个状态，输出为这个状态的价值。
 
 $$\begin{aligned}V(s)&=\mathbb{E}[G_t|s_t=s]\\&=\mathbb{E}[r_t+\gamma r_{t+1}+\gamma^2r_{t+2}+\ldots|s_t=s]\\&=\mathbb{E}[r_t+\gamma(r_{t+1}+\gamma r_{t+2}+\ldots)|s_t=s]\\&=\mathbb{E}[r_t+\gamma G_{t+1}|s_t=s]\\&=\mathbb{E}[r_t+\gamma V(s_{t+1})|s_t=s]\end{aligned}$$
 
-对最后一式进行分解，其中，即时奖励的期望为奖励函数的输出：$\mathbb{E}[r_t|s_t=s]=R(s)$
+对最后一式进行分解，其中，即时奖励的期望为奖励函数的输出：$\mathbb{E}[R_t|s_t=s]=R(s)$
 
 剩余部分$\mathbb{E}[\gamma V(s_{t+1})|s_{t}=s]$ 根据从状态s出发的转移概率可以得到；
 
@@ -187,57 +185,31 @@ print("MRP中每个状态价值分别为\n", V)
 
 4、迭代算法：
 
-（1）蒙特卡洛采样算法：(相当于对回报求均值)
-
-当得到一个马尔可夫奖励过程后，我们可以从某个状态开始，把小船放到状态转移矩阵里面，让它“随波逐流”，这样就会产生一个轨迹。产生一个轨迹之后，就会得到一个奖励，那么直接把折扣的奖励即回报 g 算出来。算出来之后将它积累起来，得到回报Gt。 当积累了一定数量的轨迹之后，我们直接用 Gt除以轨迹数量，就会得到某个状态的价值
+（1）蒙特卡洛算法：
 
 ![alt text](image-2.png)
 
 
 
-（2）动态规划算法：
+（2）
 
-通过**自举（bootstrapping）**的方法不停地迭代贝尔曼方程，当最后更新的状态与我们上一个状态的区别并不大的时候，更新就可以停止，我们就可以输出最新的 V′(s) 作为它当前的状态的价值。
 
-![alt text](image-3.png)
+
+（3）
+
+
 
 
 
 ### 2.3 马尔科夫决策过程（MDP）
 
-1、组成：MDP = MRP + agent's action
-![alt text](image-4.png)
+1、MDP = MRP + agent's action
 
-$$\langle\mathcal{s},\mathcal{a},P,r,\gamma\rangle$$
+2、组成：
 
-$$\begin{aligned}&\mathcal{s}\text{是状态的集合;}\\&\mathcal{a}\text{是动作的集合;}\\&\gamma\text{是折扣因子;}\\&r(s,a)\text{是奖励函数,此时奖励可以同时取决于状态}s\text{和动作}a\text{,在奖励函数只取决于状态}s\text{时,则}\\&\text{退化为}r(s)\mathrm{;}\\&P(s^{\prime}|s,a)\text{是状态转移函数,表示在状态}s\text{执行动作}a\text{之后到达状态}s^{\prime}\text{的概率。}\end{aligned}$$
+$$\langle\mathcal{S},\mathcal{A},P,r,\gamma\rangle$$
 
-
-
-2、状态转移：
-
-状态转移：$p\left(s_{t+1}=s^{\prime}\mid s_t=s,a_t=a\right)$
-
-MDP满足条件：$p\left(s_{t+1}\mid s_t,a_t\right)=p\left(s_{t+1}\mid h_t,a_t\right)$
+$$\begin{aligned}&\mathcal{S}\text{是状态的集合;}\\&\mathcal{A}\text{是动作的集合;}\\&\gamma\text{是折扣因子;}\\&r(s,a)\text{是奖励函数,此时奖励可以同时取决于状态}s\text{和动作}a\text{,在奖励函数只取决于状态}s\text{时,则}\\&\text{退化为}r(s)\mathrm{;}\\&P(s^{\prime}|s,a)\text{是状态转移函数,表示在状态}s\text{执行动作}a\text{之后到达状态}s^{\prime}\text{的概率。}\end{aligned}$$
 
 
 
-3、策略：
-
-（1）状态、动作概率：
-
-在某个状态可能采取某个行动的概率 
-
-$\pi(a\mid s)=p\left(a_t=a\mid s_t=s\right)$
-
-
-
-（2）策略转化：
-
-对动作进行加权，得到MRP的**状态转移概率**
-
- $P_\pi\left(s^{\prime}\mid s\right)=\sum_{a\in A}\pi(a\mid s)p\left(s^{\prime}\mid s,a\right)$
-
-
-
-4、价值函数：
