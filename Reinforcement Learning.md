@@ -206,6 +206,7 @@ print("MRP中每个状态价值分别为\n", V)
 ### 2.3 马尔科夫决策过程（MDP）
 
 1、组成：MDP = MRP + agent's action
+
 ![alt text](image-4.png)
 
 $$\langle\mathcal{s},\mathcal{a},P,r,\gamma\rangle$$
@@ -228,7 +229,7 @@ MDP满足条件：$p\left(s_{t+1}\mid s_t,a_t\right)=p\left(s_{t+1}\mid h_t,a_t\
 
 在某个状态可能采取某个行动的概率 
 
-$\pi(a\mid s)=p\left(a_t=a\mid s_t=s\right)$
+🌟️ $\pi(a\mid s)=p\left(a_t=a\mid s_t=s\right)$
 
 
 
@@ -241,3 +242,4 @@ $\pi(a\mid s)=p\left(a_t=a\mid s_t=s\right)$
 
 
 4、价值函数：
+
