@@ -1,4 +1,4 @@
-## Optimal Control 
+## Optimal Control
 
 ### Chapter 1 MPC
 
@@ -28,7 +28,7 @@ $$\begin{aligned}\hat{x}_{k+1}&=Ax_k+Bu_k\end{aligned}$$
 $$\begin{aligned}\hat{y}_{k+1}&=C\hat{x}_{k+1}\end{aligned}$$
 
 
- 
+
 2、优化问题：
 
 在每个控制周期中，MPC根据当前状态和未来控制输入的预测结果，通过求解一个优化问题来得到最优的控制输入。
@@ -47,5 +47,13 @@ $$\min_{u_k}\sum_{i=k}^{k+N-1}\left[Q\|y_i-r_i\|^2+R\|u_i\|^2\right]$$
 
 $$u_{\min}\leq u_{k}\leq u_{\max}$$
 
-
 $$x_{\min}\leq x_{k}\leq x_{\max}$$
+
+
+
+
+
+## Robotics
+
+### Chapter 1
+
