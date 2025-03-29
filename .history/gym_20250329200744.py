@@ -1,7 +1,4 @@
 import copy
-import numpy as np
-import sys
-from collections import defaultdict
 
 class PolicyIteration:
     """策略迭代算法"""
@@ -107,72 +104,14 @@ def print_agent(agent, action_meaning, disaster=[], end=[]):
                 print(combined, end=" ")
         print()
 
-class CliffWalkingEnv:
-    """悬崖漫步环境"""
-    def __init__(self):
-        self.ncol = 12  # 列数
-        self.nrow = 4   # 行数
-        self.P = self.createP()  # 状态转移字典
-
-    def createP(self):
-        P = defaultdict(dict)
-        # 遍历所有状态
-        for s in range(self.nrow * self.ncol):
-            row, col = s // self.ncol, s % self.ncol
-            P[s] = defaultdict(list)
-            # 遍历所有动作
-            for a in range(4):  # 上下左右四个动作
-                # 计算下一个状态的位置
-                next_s = self.step(row, col, a)
-                next_row, next_col = next_s
-
-                # 计算回报
-                reward = -1.0
-                # 如果下一个状态是悬崖或者终点
-                if self.is_cliff(next_row, next_col):
-                    done = True
-                    reward = -100.0
-                    next_s = self.encode_state(3, 0)  # 回到起点
-                elif next_row == 3 and next_col == 11:
-                    done = True  # 到达终点
-                else:
-                    done = False
-
-                next_s = self.encode_state(next_row, next_col)
-                P[s][a].append((1.0, next_s, reward, done))
-        return P
-
-    def step(self, row, col, action):
-        """执行动作后的下一个位置"""
-        if action == 0:  # 上
-            next_row = max(row - 1, 0)
-            next_col = col
-        elif action == 1:  # 下
-            next_row = min(row + 1, self.nrow - 1)
-            next_col = col
-        elif action == 2:  # 左
-            next_row = row
-            next_col = max(col - 1, 0)
-        elif action == 3:  # 右
-            next_row = row
-            next_col = min(col + 1, self.ncol - 1)
-        return next_row, next_col
-
-    def encode_state(self, row, col):
-        """将行列位置编码为一维状态索引"""
-        return row * self.ncol + col
-
-    def is_cliff(self, row, col):
-        """判断是否是悬崖位置"""
-        return row == 3 and 1 <= col <= 10
-
 # 示例使用（需要CliffWalkingEnv环境实现）
 if __name__ == "__main__":
-    # 创建悬崖漫步环境实例
-    env = CliffWalkingEnv()
-    action_meaning = ['↑', '↓', '←', '→']  # 动作含义
+    from env import CliffWalkingEnv  # 假设环境已实现
     
-    # 初始化策略迭代参数
+    env = CliffWalkingEnv()
+    action_meaning = ['↑', '↓', '←', '→']  # 上，下，左，右
+    
+    # 初始化策略迭代算法参数
     theta = 0.001
     gamma = 0.9
     agent = PolicyIteration(env, theta, gamma)
