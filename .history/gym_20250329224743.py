@@ -1,34 +1,32 @@
-import gymnasium as gym 
+import gym
 
 class PolicyIteration:
     def __init__(self, env, theta, gamma):
         self.env = env
-        self.n_states = env.observation_space.n  # 使用 observation_space.n 替代 nS
-        self.n_actions = env.action_space.n      # 使用 action_space.n 替代 nA
-        self.v = [0] * self.n_states            # 初始化价值函数
-        self.pi = [[0.25] * self.n_actions for _ in range(self.n_states)]  # 初始化均匀随机策略
+        self.v = [0] * env.nS  # 初始化价值函数
+        self.pi = [[0.25] * env.nA for _ in range(env.nS)]  # 初始化均匀随机策略
         self.theta = theta
         self.gamma = gamma
 
     def policy_evaluation(self):
         while True:
             delta = 0
-            for s in range(self.n_states):
+            for s in range(self.env.nS):
                 v = self.v[s]
                 self.v[s] = sum(self.pi[s][a] * sum(p * (r + self.gamma * self.v[next_s])
-                    for p, next_s, r, _ in self.env.P[s][a]) for a in range(self.n_actions))
+                    for p, next_s, r, _ in self.env.P[s][a]) for a in range(self.env.nA))
                 delta = max(delta, abs(v - self.v[s]))
             if delta < self.theta:
                 break
 
     def policy_improvement(self):
         policy_stable = True
-        for s in range(self.n_states):
+        for s in range(self.env.nS):
             old = self.pi[s].copy()
             q_values = [sum(p * (r + self.gamma * self.v[next_s])
-                for p, next_s, r, _ in self.env.P[s][a]) for a in range(self.n_actions)]
-            best_a = max(range(self.n_actions), key=lambda a: q_values[a])
-            self.pi[s] = [1.0 if a == best_a else 0.0 for a in range(self.n_actions)]
+                for p, next_s, r, _ in self.env.P[s][a]) for a in range(self.env.nA)]
+            best_a = max(range(self.env.nA), key=lambda a: q_values[a])
+            self.pi[s] = [1.0 if a == best_a else 0.0 for a in range(self.env.nA)]
             if old != self.pi[s]:
                 policy_stable = False
         return policy_stable
@@ -62,7 +60,7 @@ def print_agent(agent, action_meaning, disaster=[], end=[]):
 
 
 
-env = gym.make("FrozenLake-v1")  # 创建环境
+env = gym.make("FrozenLake-v0")  # 创建环境
 env = env.unwrapped  # 解封装才能访问状态转移矩阵P
 env.render()  # 环境渲染,通常是弹窗显示或打印出可视化的环境
 
