@@ -822,13 +822,3 @@ agent.value_iteration()
 print_agent(agent, action_meaning, [5, 7, 11, 12], [15])
 ```
 
-
-
-
-
-
-
-## Chapter 4 Temporal Difference Algorithm
-
-
-
