@@ -1,0 +1,70 @@
+[C/C++ Library](https://mp.weixin.qq.com/s?__biz=Mzk0OTU2ODg5OQ==&mid=2247485826&idx=1&sn=8794497d8b9169c5d0fa4f0ca51db54f&scene=21#wechat_redirect)
+
+[Python Library](https://python-control.readthedocs.io/en/0.10.1/)
+
+# Optimal Control
+
+[Note](https://zhuanlan.zhihu.com/p/629131647)
+
+[Optimal Control Library](https://openocl.github.io/)
+
+## Chapter 1 MPC
+
+1、原理：
+
+(1) 基本原理：通过预测系统的未来行为，并在每个控制周期内优化当前的控制输入，从而达到系统性能的最优控制。
+
+![alt text](./Control.assets/image-1745210488516-18.png)
+
+(2) 状态空间：
+
+$$
+\begin{aligned}x_{k+1}&=Ax_k+Bu_k\end{aligned}
+$$
+
+$$
+\begin{aligned}y_{k}&=Cx_k\end{aligned}
+$$
+
+其中$x_{k}$为系统在时刻k的状态向量，$u_{k}$为控制输入，$y_{k}$是系统的输出，A、B、C为系统的状态矩阵、输入矩阵和输出矩阵
+
+(3) 预测模型：
+
+MPC通过系统模型对未来若干时刻的状态进行预测。给定当前时刻$K$的状态$x_{k}$，MPC可以预测未来$N$个时刻的状态和输出：
+
+$$
+\begin{aligned}\hat{x}_{k+1}&=Ax_k+Bu_k\end{aligned}
+
+\begin{aligned}\hat{y}_{k+1}&=C\hat{x}_{k+1}\end{aligned}
+$$
+
+
+2、优化问题：
+
+在每个控制周期中，MPC根据当前状态和未来控制输入的预测结果，通过求解一个优化问题来得到最优的控制输入。
+
+$$
+\min_{u_k}\sum_{i=k}^{k+N-1}\left[Q\|y_i-r_i\|^2+R\|u_i\|^2\right]
+$$
+其中，$r_i$是期望轨迹，$Q$和$R$是权重矩阵，用于平衡输出误差和控制输入的代价。目标是最小化输出误差和控制输入代价的加权和。这个优化问题通常需要在每个控制周期内求解。
+
+3、约束条件：
+
+* 状态约束： 限制系统状态在某些范围内波动，如温度、压力、速度等。
+* 输入约束：限制控制输入的大小，如电流、电压等。
+* 输出约束： 限制系统输出的范围，如位置、速度等。
+
+对于控制输入，可以有如下约束，从而确保控制系统在合理的范围内运行：
+
+$$
+u_{\min}\leq u_{k}\leq u_{\max}
+
+x_{\min}\leq x_{k}\leq x_{\max}
+$$
+
+
+
+# Robotics
+
+[Dynamic Library](https://mp.weixin.qq.com/s/EJfKPt0Xk0179eCrg_puQQ)
+
