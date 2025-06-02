@@ -6,6 +6,8 @@ https://zhuanlan.zhihu.com/p/340344248
 
 [Robots | Papers With Code](https://paperswithcode.com/area/robots)
 
+ 
+
 
 ### 1、Robotics Basic：
 
@@ -20,6 +22,8 @@ https://zhuanlan.zhihu.com/p/340344248
 
 
 [【自动驾驶】总目录（持续更新）_自动驾驶归档清单-CSDN博客](https://blog.csdn.net/weixin_42301220/article/details/124832403)
+
+
 
 
 ### 2、Perception＆Localization
@@ -43,6 +47,10 @@ b. BEV:  BEVDet, BEVFusion, Occupancy Network
 visual slam, orb slam, FAST-LIVO2
 
 [自动驾驶与机器人中的SLAM技术 - 深蓝学院 - 专注人工智能与自动驾驶的学习平台](https://www.shenlanxueyuan.com/course/650?source=1)
+
+amcl
+
+
 
 
 
@@ -71,7 +79,7 @@ c.Kinodynamic:
 
 State Lattice Search、Kinodynamic RRT* , Hybrid A*
 
-[移动机器人运动规划-第二章(基于搜索的路径规划)-第一节(图搜索基础-Graph Search Basis)_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1eNAeeEEcT/?spm_id_from=333.1387.collection.video_card.click&vd_source=41ecf2720f0aef9d6e7aadbcb46c655f)
+[移动机器人运动规划-第三章(基于采样的路径规划)-第一节(feasible path planning methods)_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1ZHPueWE4U?spm_id_from=333.788.player.switch&vd_source=41ecf2720f0aef9d6e7aadbcb46c655f)
 
 (2)Trajectory/Mapping:
 
@@ -121,22 +129,25 @@ Optimal Control
 
 RLHF、PPO、DPO
 
+
+
 (2)Imitation Learning: 
 
 Diffusion policy、ACT、RT、RDT、GR
 
 
 
-humanoid：[人形机器人+RL 论文汇总 - 知乎](https://zhuanlan.zhihu.com/p/674122347)
+(3)DRL:
 
-[资源中心 - 具身智能社群](https://www.unifolm.com/#/resource)
-
-[RL做足式机器人运控的经典必读文章（带私货） - 知乎](https://zhuanlan.zhihu.com/p/29806809248)
+[Welcome to Spinning Up in Deep RL! — Spinning Up documentation](https://spinningup.openai.com/en/latest/)
 
 
 
+### 6. Simulator：
 
-### 6、Simulator：
+[CS331B](https://web.stanford.edu/class/cs331b/)
+
+[CS 294-277, Robots That Learn (Fall 2024)](https://robots-that-learn.github.io/)
 
 (1) Mujoco
 
@@ -151,9 +162,32 @@ humanoid：[人形机器人+RL 论文汇总 - 知乎](https://zhuanlan.zhihu.com
 
 
 
-### 7、VLM：
+### 7. VLM：
 
 VLA, Open-VLA, pi0, rdt, peract2, RT-1
 
 [ICLR2025 GenBot](https://genbot-workshop.github.io/)
 
+
+
+### 8. Humanoid Robot
+
+[人形机器人+RL 论文汇总 - 知乎](https://zhuanlan.zhihu.com/p/674122347)
+
+[资源中心 - 具身智能社群](https://www.unifolm.com/#/resource)
+
+[RL做足式机器人运控的经典必读文章（带私货） - 知乎](https://zhuanlan.zhihu.com/p/29806809248)
+
+[人形机器人系统：理论与实践 - 深蓝学院 - 专注人工智能与自动驾驶的学习平台](https://www.shenlanxueyuan.com/course/773?source=1)
+
+![dde5a5367c386e92d99317361503e80f](./README.assets/dde5a5367c386e92d99317361503e80f.jpg)
+
+![img](./README.assets/640.jpeg)
+
+
+
+
+
+### 9. Legged Robot
+
+[足式机器人运动控制 - 深蓝学院 - 专注人工智能与自动驾驶的学习平台](https://www.shenlanxueyuan.com/course/770)

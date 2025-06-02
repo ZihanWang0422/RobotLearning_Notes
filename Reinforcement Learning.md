@@ -1,4 +1,4 @@
-## Reinforcement Learning
+# Reinforcement Learning
 
 [Python3 面向对象 | 菜鸟教程](https://www.runoob.com/python3/python3-class.html)
 
@@ -258,14 +258,34 @@ $\begin{aligned}Q_\pi(s,a)=R(s,a)+\gamma\sum_{s^{\prime}\in S}p\left(s^{\prime}\
 
 
 
+### 2.4 蒙特卡洛方法
+
+1. 概念：
+
+通过使用重复随机采样，然后运用概率统计方法从抽样结果中归纳出想求的目标的数值估计。
+
+2. 估计策略的状态价值函数：
+
+(1) 一个状态的价值函数是它的期望回报，因此求解方法是用策略在MDP上采样很多序列，然后计算从这个状态出发的回报再求其期望。
+$$
+V^\pi(s)=\mathbb{E}_\pi[G_t|S_t=s]\approx\frac{1}{N}\sum_{i=1}^NG_t^{(i)}
+$$
+
+
+(2) 计算过程：
+
+![image-20250518141628981](./Reinforcement Learning.assets/image-20250518141628981-1747548994347-1.png)
+
+
+
 ## Chapter 3 Dynamic Programming
 
 ### 3.1 概念
 
-1. 要求事先知道环境的状态转移函数和奖励函数，也就是需要知道整个马尔可夫决策过程
+1. 基于模型的强化学习：要求事先知道或者根据智能体与环境交互采样到的数据学习得到环境的状态转移函数和奖励函数，也就是需要知道整个马尔可夫决策过程
 2. 类型：
 
-策略迭代：策略评估+策略提升
+**策略迭代：策略评估+策略提升**
 
 价值迭代
 
@@ -630,6 +650,8 @@ if __name__ == "__main__":
 
 策略迭代中的策略评估需要进行很多轮才能收敛得到某一策略的状态函数，这需要很大的计算量，尤其是在状态和动作空间比较大的情况下
 
+
+
 2. 价值迭代算法：
 
 贝尔曼最优方程的更新公式：
@@ -826,9 +848,794 @@ print_agent(agent, action_meaning, [5, 7, 11, 12], [15])
 
 
 
-
-
 ## Chapter 4 Temporal Difference Algorithm
 
+### 4.1 无模型的强化学习
+
+1. 大部分强化学习现实场景，其马尔可夫决策过程的状态转移概率是
+
+   无法写出来的，也就无法直接进行动态规划。在这种情况下，智能
+
+   体只能和环境进行交互，通过采样到的数据来学习。
 
 
+
+2. 特点：
+
+* **不需要事先知道环境的奖励函数和状态转移函数**，而是直接使用和环境交互的过程中采样到的数据来学习。
+
+![img](./Reinforcement Learning.assets/480.25b67b37-1748008231429-22-1748008232940-24.png)
+
+
+
+
+
+**策略评估（时序差分算法）+ 策略提升（Sarsa算法）**
+
+
+
+### 4.2 时序差分算法
+
+1. 策略评估：
+
+时序差分算法用当前获得的奖励加上下一个状态的价值估计来作为在当前状态会
+
+获得的回报,其表达式如下，相当于将蒙特卡洛算法中的Gt用$r_t+\gamma V(s_{t+1})$代替
+$$
+V(s_t)\leftarrow V(s_t)+\alpha[r_t+\gamma V(s_{t+1})-V(s_t)]
+$$
+注：$R_t+\gamma V(s_{t+1})-V(s_t)$为时序差分误差
+
+
+
+2. 策略提升：
+
+使用时序差分算法来估计动作价值函数Q；
+$$
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t)]
+$$
+接着使用贪婪算法来选取在某个状态下动作价值最大的动作 - $\arg\max_{a}Q(s,a)$
+
+
+
+3. 对比：
+
+|              |                           偏差                           |                             方差                             |
+| :----------: | :------------------------------------------------------: | :----------------------------------------------------------: |
+| 蒙特卡洛方法 | 无偏（利用当前状态之后每一步的奖励而不使用任何价值估计） | 较大的方差（每一步的状态转移都有不确定性，而每一步状态采取的动作所得到的不一样的奖励最终都会加起来，这会极大影响最终的价值估计） |
+| 时序差分方法 |   有偏（用到了下一个状态的价值估计而不是其真实的价值）   |       小方差（只关注了一步状态转移，用到了一步的奖励）       |
+
+
+
+
+
+
+
+
+
+
+
+### 4.3 Sarsa算法
+
+1. 算法：
+
+(1) 使用时序差分算法来估计动作价值函数Q；
+$$
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t)]
+$$
+接着使用贪婪算法来选取在某个状态下动作价值最大的动作 - $\arg\max_{a}Q(s,a)$
+
+$\epsilon$-贪婪策略：有$1-\epsilon$的概率采用动作价值最大的那个动作，另外有$\epsilon$的概率从动作空间
+
+中随机采取一个动作。
+$$
+\pi(a|s)=\begin{cases}\epsilon/|\mathcal{A}|+1-\epsilon&\quad\text{如果}a=\arg\max_{a^{\prime}}Q(s,a^{\prime})\\\epsilon/|\mathcal{A}|&\quad\text{其他动作}&\end{cases}
+$$
+
+
+(2) 算法过程：
+
+![image-20250518163008461](./Reinforcement Learning.assets/image-20250518163008461.png)
+
+(3) 代码：
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+from tqdm import tqdm  # tqdm是显示循环进度条的库
+
+
+class CliffWalkingEnv:
+    def __init__(self, ncol, nrow):
+        self.nrow = nrow
+        self.ncol = ncol
+        self.x = 0  # 记录当前智能体位置的横坐标
+        self.y = self.nrow - 1  # 记录当前智能体位置的纵坐标
+
+    def step(self, action):  # 外部调用这个函数来改变当前位置
+        # 4种动作, change[0]:上, change[1]:下, change[2]:左, change[3]:右。坐标系原点(0,0)
+        # 定义在左上角
+        change = [[0, -1], [0, 1], [-1, 0], [1, 0]]
+        self.x = min(self.ncol - 1, max(0, self.x + change[action][0]))
+        self.y = min(self.nrow - 1, max(0, self.y + change[action][1]))
+        next_state = self.y * self.ncol + self.x
+        reward = -1
+        done = False
+        if self.y == self.nrow - 1 and self.x > 0:  # 下一个位置在悬崖或者目标
+            done = True
+            if self.x != self.ncol - 1:
+                reward = -100
+        return next_state, reward, done
+
+    def reset(self):  # 回归初始状态,坐标轴原点在左上角
+        self.x = 0
+        self.y = self.nrow - 1
+        return self.y * self.ncol + self.x
+
+class Sarsa:
+    """ Sarsa算法 """
+    def __init__(self, ncol, nrow, epsilon, alpha, gamma, n_action=4):
+        self.Q_table = np.zeros([nrow * ncol, n_action])  # 初始化Q(s,a)表格
+        self.n_action = n_action  # 动作个数
+        self.alpha = alpha  # 学习率
+        self.gamma = gamma  # 折扣因子
+        self.epsilon = epsilon  # epsilon-贪婪策略中的参数
+
+    def take_action(self, state):  # 选取下一步的操作,具体实现为epsilon-贪婪
+        if np.random.random() < self.epsilon:
+            action = np.random.randint(self.n_action)
+        else:
+            action = np.argmax(self.Q_table[state])
+        return action
+
+    def best_action(self, state):  # 用于打印策略
+        Q_max = np.max(self.Q_table[state])
+        a = [0 for _ in range(self.n_action)]
+        for i in range(self.n_action):  # 若两个动作的价值一样,都会记录下来
+            if self.Q_table[state, i] == Q_max:
+                a[i] = 1
+        return a
+
+    def update(self, s0, a0, r, s1, a1):
+        td_error = r + self.gamma * self.Q_table[s1, a1] - self.Q_table[s0, a0]
+        self.Q_table[s0, a0] += self.alpha * td_error
+
+ncol = 12
+nrow = 4
+env = CliffWalkingEnv(ncol, nrow)
+np.random.seed(0)
+epsilon = 0.1
+alpha = 0.1
+gamma = 0.9
+agent = Sarsa(ncol, nrow, epsilon, alpha, gamma)
+num_episodes = 500  # 智能体在环境中运行的序列的数量
+
+return_list = []  # 记录每一条序列的回报
+for i in range(10):  # 显示10个进度条
+    # tqdm的进度条功能
+    with tqdm(total=int(num_episodes / 10), desc='Iteration %d' % i) as pbar:
+        for i_episode in range(int(num_episodes / 10)):  # 每个进度条的序列数
+            episode_return = 0
+            state = env.reset()
+            action = agent.take_action(state)
+            done = False
+            while not done:
+                next_state, reward, done = env.step(action)
+                next_action = agent.take_action(next_state)
+                episode_return += reward  # 这里回报的计算不进行折扣因子衰减
+                agent.update(state, action, reward, next_state, next_action)
+                state = next_state
+                action = next_action
+            return_list.append(episode_return)
+            if (i_episode + 1) % 10 == 0:  # 每10条序列打印一下这10条序列的平均回报
+                pbar.set_postfix({
+                    'episode':
+                    '%d' % (num_episodes / 10 * i + i_episode + 1),
+                    'return':
+                    '%.3f' % np.mean(return_list[-10:])
+                })
+            pbar.update(1)
+
+episodes_list = list(range(len(return_list)))
+plt.plot(episodes_list, return_list)
+plt.xlabel('Episodes')
+plt.ylabel('Returns')
+plt.title('Sarsa on {}'.format('Cliff Walking'))
+plt.show()
+
+
+#Sarsa 算法得到的策略在各个状态下会使智能体采取什么样的动作
+def print_agent(agent, env, action_meaning, disaster=[], end=[]):
+    for i in range(env.nrow):
+        for j in range(env.ncol):
+            if (i * env.ncol + j) in disaster:
+                print('****', end=' ')
+            elif (i * env.ncol + j) in end:
+                print('EEEE', end=' ')
+            else:
+                a = agent.best_action(i * env.ncol + j)
+                pi_str = ''
+                for k in range(len(action_meaning)):
+                    pi_str += action_meaning[k] if a[k] > 0 else 'o'
+                print(pi_str, end=' ')
+        print()
+
+
+action_meaning = ['^', 'v', '<', '>']
+print('Sarsa算法最终收敛得到的策略为：')
+print_agent(agent, env, action_meaning, list(range(37, 47)), [47])
+```
+
+
+
+### 4.4 多步Sarsa算法
+
+1. 对比
+
+|              |                           偏差                           |                             方差                             |
+| :----------: | :------------------------------------------------------: | :----------------------------------------------------------: |
+| 蒙特卡洛方法 | 无偏（利用当前状态之后每一步的奖励而不使用任何价值估计） | 较大的方差（每一步的状态转移都有不确定性，而每一步状态采取的动作所得到的不一样的奖励最终都会加起来，这会极大影响最终的价值估计） |
+| 时序差分方法 |   有偏（用到了下一个状态的价值估计而不是其真实的价值）   |       小方差（只关注了一步状态转移，用到了一步的奖励）       |
+
+2. 算法：
+
+先计算n步的奖励：
+$$
+将G_t=r_t+\gamma Q(s_{t+1},a_{t+1})
+$$
+
+$$
+替换成:
+G_t=r_t+\gamma r_{t+1}+\cdots+\gamma^nQ(s_{t+n},a_{t+n})
+$$
+
+于是Sarsa中的动作价值函数变为：
+$$
+$Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[r_t+\gamma Q(s_{t+1},a_{t+1})-Q(s_t,a_t)]
+$$
+
+$$
+\text{替换成}Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[r_t+\gamma r_{t+1}+\cdots+\gamma^nQ(s_{t+n},a_{t+n})-Q(s_t,a_t)]
+$$
+
+运行后发现五步比单步收敛速度更快
+
+```python
+class nstep_Sarsa:
+    """ n步Sarsa算法 """
+    def __init__(self, n, ncol, nrow, epsilon, alpha, gamma, n_action=4):
+        self.Q_table = np.zeros([nrow * ncol, n_action])
+        self.n_action = n_action
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.n = n  # 采用n步Sarsa算法
+        self.state_list = []  # 保存之前的状态
+        self.action_list = []  # 保存之前的动作
+        self.reward_list = []  # 保存之前的奖励
+
+    def take_action(self, state):
+        if np.random.random() < self.epsilon:
+            action = np.random.randint(self.n_action)
+        else:
+            action = np.argmax(self.Q_table[state])
+        return action
+
+    def best_action(self, state):  # 用于打印策略
+        Q_max = np.max(self.Q_table[state])
+        a = [0 for _ in range(self.n_action)]
+        for i in range(self.n_action):
+            if self.Q_table[state, i] == Q_max:
+                a[i] = 1
+        return a
+    
+#n步实现过程
+    def update(self, s0, a0, r, s1, a1, done):
+        self.state_list.append(s0)
+        self.action_list.append(a0)
+        self.reward_list.append(r)
+        if len(self.state_list) == self.n:  # 若保存的数据可以进行n步更新
+            G = self.Q_table[s1, a1]  # 得到Q(s_{t+n}, a_{t+n})
+            for i in reversed(range(self.n)):
+                G = self.gamma * G + self.reward_list[i]  # 不断向前计算每一步的回报
+                # 如果到达终止状态,最后几步虽然长度不够n步,也将其进行更新
+                if done and i > 0:
+                    s = self.state_list[i]
+                    a = self.action_list[i]
+                    self.Q_table[s, a] += self.alpha * (G - self.Q_table[s, a])
+            s = self.state_list.pop(0)  # 将需要更新的状态动作从列表中删除,下次不必更新
+            a = self.action_list.pop(0)
+            self.reward_list.pop(0)
+            # n步Sarsa的主要更新步骤
+            self.Q_table[s, a] += self.alpha * (G - self.Q_table[s, a])
+        if done:  # 如果到达终止状态,即将开始下一条序列,则将列表全清空
+            self.state_list = []
+            self.action_list = []
+            self.reward_list = []
+            
+np.random.seed(0)
+n_step = 5  # 5步Sarsa算法
+alpha = 0.1
+epsilon = 0.1
+gamma = 0.9
+agent = nstep_Sarsa(n_step, ncol, nrow, epsilon, alpha, gamma)
+num_episodes = 500  # 智能体在环境中运行的序列的数量
+
+return_list = []  # 记录每一条序列的回报
+for i in range(10):  # 显示10个进度条
+    #tqdm的进度条功能
+    with tqdm(total=int(num_episodes / 10), desc='Iteration %d' % i) as pbar:
+        for i_episode in range(int(num_episodes / 10)):  # 每个进度条的序列数
+            episode_return = 0
+            state = env.reset()
+            action = agent.take_action(state)
+            done = False
+            while not done:
+                next_state, reward, done = env.step(action)
+                next_action = agent.take_action(next_state)
+                episode_return += reward  # 这里回报的计算不进行折扣因子衰减
+                agent.update(state, action, reward, next_state, next_action,
+                             done)
+                state = next_state
+                action = next_action
+            return_list.append(episode_return)
+            if (i_episode + 1) % 10 == 0:  # 每10条序列打印一下这10条序列的平均回报
+                pbar.set_postfix({
+                    'episode':
+                    '%d' % (num_episodes / 10 * i + i_episode + 1),
+                    'return':
+                    '%.3f' % np.mean(return_list[-10:])
+                })
+            pbar.update(1)
+
+episodes_list = list(range(len(return_list)))
+plt.plot(episodes_list, return_list)
+plt.xlabel('Episodes')
+plt.ylabel('Returns')
+plt.title('5-step Sarsa on {}'.format('Cliff Walking'))
+plt.show()
+```
+
+
+
+### 4.5 Q-Learning
+
+1. 算法：
+
+(1) 时序差分更新方式：
+$$
+Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\alpha[R_t+\gamma\max_aQ(s_{t+1},a_{t+1}-Q(s_t,a_t)]
+$$
+(2) 流程：
+
+![image-20250518200109792](./Reinforcement Learning.assets/image-20250518200109792.png)
+
+(3) 代码：
+
+```python
+class QLearning:
+    """ Q-learning算法 """
+    def __init__(self, ncol, nrow, epsilon, alpha, gamma, n_action=4):
+        self.Q_table = np.zeros([nrow * ncol, n_action])  # 初始化Q(s,a)表格
+        self.n_action = n_action  # 动作个数
+        self.alpha = alpha  # 学习率
+        self.gamma = gamma  # 折扣因子
+        self.epsilon = epsilon  # epsilon-贪婪策略中的参数
+
+    def take_action(self, state):  #选取下一步的操作
+        if np.random.random() < self.epsilon:
+            action = np.random.randint(self.n_action)
+        else:
+            action = np.argmax(self.Q_table[state])
+        return action
+
+    def best_action(self, state):  # 用于打印策略
+        Q_max = np.max(self.Q_table[state])
+        a = [0 for _ in range(self.n_action)]
+        for i in range(self.n_action):
+            if self.Q_table[state, i] == Q_max:
+                a[i] = 1
+        return a
+
+    def update(self, s0, a0, r, s1):
+        td_error = r + self.gamma * self.Q_table[s1].max(
+        ) - self.Q_table[s0, a0]
+        self.Q_table[s0, a0] += self.alpha * td_error
+        
+        
+np.random.seed(0)
+epsilon = 0.1
+alpha = 0.1
+gamma = 0.9
+agent = QLearning(ncol, nrow, epsilon, alpha, gamma)
+num_episodes = 500  # 智能体在环境中运行的序列的数量
+
+return_list = []  # 记录每一条序列的回报
+for i in range(10):  # 显示10个进度条
+    # tqdm的进度条功能
+    with tqdm(total=int(num_episodes / 10), desc='Iteration %d' % i) as pbar:
+        for i_episode in range(int(num_episodes / 10)):  # 每个进度条的序列数
+            episode_return = 0
+            state = env.reset()
+            done = False
+            while not done:
+                action = agent.take_action(state)
+                next_state, reward, done = env.step(action)
+                episode_return += reward  # 这里回报的计算不进行折扣因子衰减
+                agent.update(state, action, reward, next_state)
+                state = next_state
+            return_list.append(episode_return)
+            if (i_episode + 1) % 10 == 0:  # 每10条序列打印一下这10条序列的平均回报
+                pbar.set_postfix({
+                    'episode':
+                    '%d' % (num_episodes / 10 * i + i_episode + 1),
+                    'return':
+                    '%.3f' % np.mean(return_list[-10:])
+                })
+            pbar.update(1)
+
+episodes_list = list(range(len(return_list)))
+plt.plot(episodes_list, return_list)
+plt.xlabel('Episodes')
+plt.ylabel('Returns')
+plt.title('Q-learning on {}'.format('Cliff Walking'))
+plt.show()
+
+action_meaning = ['^', 'v', '<', '>']
+print('Q-learning算法最终收敛得到的策略为：')
+print_agent(agent, env, action_meaning, list(range(37, 47)), [47])
+```
+
+
+
+
+
+#### 2. 在线策略和离线策略：
+
+(1) Sarsa - on-policy：更新公式必须使用当前贪心策略采样得到的五元组(s, a, r, s', a')来更新当前状态动作对的价值Q(s', a').
+
+(其中的a'是当前策略在s'下的动作)
+
+
+
+(2) Q-Learning -off-policy：更新公式使用四元组(s, a, r, s')来更新当前状态动作对的价值Q(s, a)。
+
+(其中s, a是给定的条件，r和s'均是环境中采样，因此不需要一定是当前策略采样得到的数据，也可以是自行为策略)
+
+![image-20250518203642167](./Reinforcement Learning.assets/image-20250518203642167.png)
+
+
+
+(3) 概念：在线策略（on-policy）算法表示行为策略和目标策略是同一个策略；而离线策略（off-policy）算法表示行为策略和目标策略不是同一个策略
+
+行为策略：采样数据的策略
+
+目标策略：用这些数据来更新的策略
+
+
+
+## Chapter 5 Dyna-Q Algorithm
+
+### 4.1  Dyna-Q(基于模型) 
+
+1. 算法：
+
+* 使用Q-planning 的方法来基于模型生成一些模拟数据，然后用模拟数据和真实数据一起改进策略。
+
+* 在每次与环境进行交互执行一次 Q-learning 之后，Dyna-Q 会做n次 Q-planning:
+
+Q-planning 每次选取一个曾经访问过的状态$s$，采取一个曾经在该状态下执行过的动作$a$
+
+，通过模型得到转移后的状态$s'$以及奖励$r$，并根据这个模拟数据(s, a, r, s')，用 Q-
+
+learning 的更新方式来更新动作价值函数。
+
+![image-20250523215054723](./Reinforcement Learning.assets/image-20250523215054723-1748008256498-26.png)
+
+2. 代码：
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+from tqdm import tqdm
+import random
+import time
+
+
+class CliffWalkingEnv:
+    def __init__(self, ncol, nrow):
+        self.nrow = nrow
+        self.ncol = ncol
+        self.x = 0  # 记录当前智能体位置的横坐标
+        self.y = self.nrow - 1  # 记录当前智能体位置的纵坐标
+
+    def step(self, action):  # 外部调用这个函数来改变当前位置
+        # 4种动作, change[0]:上, change[1]:下, change[2]:左, change[3]:右。坐标系原点(0,0)
+        # 定义在左上角
+        change = [[0, -1], [0, 1], [-1, 0], [1, 0]]
+        self.x = min(self.ncol - 1, max(0, self.x + change[action][0]))
+        self.y = min(self.nrow - 1, max(0, self.y + change[action][1]))
+        next_state = self.y * self.ncol + self.x
+        reward = -1
+        done = False
+        if self.y == self.nrow - 1 and self.x > 0:  # 下一个位置在悬崖或者目标
+            done = True
+            if self.x != self.ncol - 1:
+                reward = -100
+        return next_state, reward, done
+
+    def reset(self):  # 回归初始状态,起点在左上角
+        self.x = 0
+        self.y = self.nrow - 1
+        return self.y * self.ncol + self.x
+   
+class DynaQ:
+    """ Dyna-Q算法 """
+    def __init__(self,
+                 ncol,
+                 nrow,
+                 epsilon,
+                 alpha,
+                 gamma,
+                 n_planning,
+                 n_action=4):
+        self.Q_table = np.zeros([nrow * ncol, n_action])  # 初始化Q(s,a)表格
+        self.n_action = n_action  # 动作个数
+        self.alpha = alpha  # 学习率
+        self.gamma = gamma  # 折扣因子
+        self.epsilon = epsilon  # epsilon-贪婪策略中的参数
+
+        self.n_planning = n_planning  #执行Q-planning的次数, 对应1次Q-learning
+        self.model = dict()  # 环境模型
+
+    def take_action(self, state):  # 选取下一步的操作
+        if np.random.random() < self.epsilon:
+            action = np.random.randint(self.n_action)
+        else:
+            action = np.argmax(self.Q_table[state])
+        return action
+
+    def q_learning(self, s0, a0, r, s1):
+        td_error = r + self.gamma * self.Q_table[s1].max(
+        ) - self.Q_table[s0, a0]
+        self.Q_table[s0, a0] += self.alpha * td_error
+
+    def update(self, s0, a0, r, s1):
+        self.q_learning(s0, a0, r, s1)
+        self.model[(s0, a0)] = r, s1  # 将数据添加到模型中
+        for _ in range(self.n_planning):  # Q-planning循环
+            # 随机选择曾经遇到过的状态动作对
+            (s, a), (r, s_) = random.choice(list(self.model.items()))
+            self.q_learning(s, a, r, s_)
+            
+def DynaQ_CliffWalking(n_planning):
+    ncol = 12
+    nrow = 4
+    env = CliffWalkingEnv(ncol, nrow)
+    epsilon = 0.01
+    alpha = 0.1
+    gamma = 0.9
+    agent = DynaQ(ncol, nrow, epsilon, alpha, gamma, n_planning)
+    num_episodes = 300  # 智能体在环境中运行多少条序列
+
+    return_list = []  # 记录每一条序列的回报
+    for i in range(10):  # 显示10个进度条
+        # tqdm的进度条功能
+        with tqdm(total=int(num_episodes / 10),
+                  desc='Iteration %d' % i) as pbar:
+            for i_episode in range(int(num_episodes / 10)):  # 每个进度条的序列数
+                episode_return = 0
+                state = env.reset()
+                done = False
+                while not done:
+                    action = agent.take_action(state)
+                    next_state, reward, done = env.step(action)
+                    episode_return += reward  # 这里回报的计算不进行折扣因子衰减
+                    agent.update(state, action, reward, next_state)
+                    state = next_state
+                return_list.append(episode_return)
+                if (i_episode + 1) % 10 == 0:  # 每10条序列打印一下这10条序列的平均回报
+                    pbar.set_postfix({
+                        'episode':
+                        '%d' % (num_episodes / 10 * i + i_episode + 1),
+                        'return':
+                        '%.3f' % np.mean(return_list[-10:])
+                    })
+                pbar.update(1)
+    return return_list
+
+np.random.seed(0)
+random.seed(0)
+n_planning_list = [0, 2, 20]
+for n_planning in n_planning_list:
+    print('Q-planning步数为：%d' % n_planning)
+    time.sleep(0.5)
+    return_list = DynaQ_CliffWalking(n_planning)
+    episodes_list = list(range(len(return_list)))
+    plt.plot(episodes_list,
+             return_list,
+             label=str(n_planning) + ' planning steps')
+plt.legend()
+plt.xlabel('Episodes')
+plt.ylabel('Returns')
+plt.title('Dyna-Q on {}'.format('Cliff Walking'))
+plt.show()
+```
+
+
+
+##  Chapter 6 DQN Algorithm
+
+### 6.1 DQN
+
+1. 函数拟合：
+
+类似车杆的环境中得到动作价值函数Q(s, a)，由于状态每一维度的值都是连续的，无法使用表格记录，因此一个常见的解决方法便是使用**函数拟合**
+
+
+
+2. 神经网络：
+
+* 动作连续：输入为状态s和动作a，输出标量，表示在状态s下采取动作a能获得的价值。
+
+* 动作离散：输入仅为状态s，并输出每一个动作的Q值。
+
+* Q网络：每一个状态s下所有可能动作a的Q值为$Q_\omega(s,a)$，其中$\omega$为神经网络用来拟合函数的参数。
+
+  用于拟合Q函数的神经网络（DQN由于其函数Q在更新过程中有maxa操作，因此只能处理动作离散的情况）
+
+<img src="./Reinforcement Learning.assets/640.46b13e89.png" alt="img" style="zoom: 80%;" />
+
+3. 深度Q网络(DQN)：
+
+$$
+Q(s,a)\leftarrow Q(s,a)+\alpha\left[r+\gamma\max_{a^{\prime}\in\mathcal{A}}Q(s^{\prime},a^{\prime})-Q(s,a)\right]
+$$
+
+上述公式使用TD学习目标$r+\gamma\max_{a^{\prime}\in\mathcal{A}}Q(s^{\prime},a^{\prime})$来增量式更新Q(s, a)，因此需**要让Q(s, a)和TD目标$r+\gamma\max_{a^{\prime}\in\mathcal{A}}Q(s^{\prime},a^{\prime})$靠近**，可以设计Q网络的损失函数为均方误差的形式：
+$$
+\omega^*=\arg\min_\omega\frac{1}{2N}\sum_{i=1}^N\left[Q_\omega\left(s_i,a_i\right)-\left(r_i+\gamma\max_{a^{\prime}}Q_\omega\left(s_i^{\prime},a^{\prime}\right)\right)\right]^2
+$$
+
+
+
+
+4. 模块解释：
+
+(1) 经验回放：
+
+维护一个**回放缓冲区**，将每次从环境中采样得到的四元组数据（状态、动作、奖励、下一个状态）存储到回放缓冲区，训练Q网络的时候再从回放缓冲区中随机采样若干数据来训练，从而实现：
+
+* 使样本满足独立假设。在 MDP 中交互采样得到的数据本身不满足独立假设，因为这一时刻的状态和上一时刻的状态有关。非独立同分布的数据对训练神经网络有很大的影响，会使神经网络拟合到最近训练的数据上。采用经验回放可以打破样本之间的相关性，让其满足独立假设。
+* 提高样本效率。每一个样本可以被使用多次，十分适合深度神经网络的梯度学习。
+
+
+
+(2) 目标网络：
+
+在更新网络参数时目标也在不断改变，因此先将TD目标中的Q网络固定，需要两套Q网络。
+
+* 原来的**训练网络**$Q_\omega(s,a)$：用于计算原来的损失函数$\frac{1}{2}[Q_{\omega}\left(s,a\right)-\left(r+\gamma\max_{a^{\prime}}Q_{\omega^{-}}\left(s^{\prime},a^{\prime}\right)\right)]^{2}$中的$Q_\omega(s,a)$，并使用正常梯度下降方法来进行更新。
+* **目标网络**$Q_{\omega^-}(s,a)$：用于计算原先损失函数$\frac{1}{2}[Q_{\omega}\left(s,a\right)-\left(r+\gamma\max_{a^{\prime}}Q_{\omega^{-}}\left(s^{\prime},a^{\prime}\right)\right)]^{2}$中的$(r+\gamma\max_{a^{\prime}}Q_{\omega^{-}}(s^{\prime},a^{\prime}))$项，其中$\omega^-$表示目标网络中的参数。
+
+✨为了让更新目标稳定，：
+
+目标网络使用训练网络的一套较旧的参数，训练网络在训练中的每
+
+一步都会更新，而目标网络的参数每隔C步才会与训练网络同步一
+
+次（$\omega^{-}\leftarrow\omega$）
+
+
+
+5. 算法流程：
+
+<img src="./Reinforcement Learning.assets/image-20250527150321952.png" alt="image-20250527150321952" style="zoom:150%;" />
+
+
+
+
+
+### 6.2 DQN改进算法
+
+1. Double DQN
+
+(1) 普通DQN算法会导致对Q值的过高估计：
+
+传统DQN的TD优化目标    $Q_{\omega^-}\left(s^\prime,\arg\max_{a^\prime}Q_{\omega^-}\left(s^\prime,a^\prime\right)\right)$
+
+当两部分采用同一个Q网络进行计算时，得到的都是神经网络当前估算的所有动作价值中的最大值。
+
+由于神经网络计算的Q值会有正向或负向的误差，在DQN的更新方式下神经网络会将正向误差累计。
+
+EG：
+
+![image-20250531154604373](./Reinforcement Learning.assets/image-20250531154604373.png)
+
+
+
+(2) double DQN算法：
+
+✨使用两个独立训练的神经网络估算价值函数$Q_{\omega^-}\left(s^\prime,\arg\max_{a^\prime}Q_{\omega}\left(s^\prime,a^\prime\right)\right)$
+
+* 训练网络$Q_{\omega}$的输出选取价值最大的动作：
+
+$$
+a^*=\arg\max_{a^\prime}Q_{\omega}\left(s^\prime,a^\prime\right)
+$$
+
+
+
+* 目标网络$Q_{\omega^-}$计算该动作的价值：
+
+$$
+Q_{\omega^{-}}\left(s^{\prime},\arg\max_{a^{\prime}}Q_{\omega}\left(s^{\prime},a^{\prime}\right)\right)
+$$
+
+
+
+* Double DQN的优化目标：
+
+$$
+r+\gamma Q_{\omega^-}\left(s^{\prime},\arg\max_{a^{\prime}}Q_\omega\left(s^{\prime},a^{\prime}\right)\right)
+$$
+
+
+
+2. Dueling DQN
+
+(1) 优势函数：同一状态下，所有动作的优势值之和为0，即所有动作的动作价值的期望就是这个状态的状态价值。
+$$
+A(s,a)=Q(s,a)-V(s)
+$$
+
+
+(2) Dueling DQN：
+$$
+Q_{\eta,\alpha,\beta}(s,a)=V_{\eta,\alpha}(s)+A_{\eta,\beta}(s,a)
+$$
+其中，V为状态价值函数；A为该状态下采取不同动作的优势函数，表示采取不同动作的差异性。
+
+
+
+(3) 网络架构：
+
+训练神经网络的最后几层的两个分支，分别输出状态价值函数和优势函数，再求和得到Q值。
+
+![img](./Reinforcement Learning.assets/640.455bc383.png)
+
+
+
+(4) 不唯一性问题：
+
+* 仅仅是简单地将 V(s) 和 A(s,a) 相加得到 Q(s,a)，那么存在无限多组 (V(s),A(s,a)) 的组合可以得到相同的 Q(s,a) 
+
+​       EG：如果神经网络发现某个 Q(s,a) 被低估了，它可以选择增加 V(s)，或者增加 A(s,a)，或者同时增加两者的一部分，这导致了 V(s) 和 A(s,a) 的估计可能变得不稳定或不准确。
+
+* 减去最大优势值：强制最优动作的优势函数的实际输出为0 。$V(s)=\max_aQ(s,a)$
+
+$$
+Q_{\eta,\alpha,\beta}(s,a)=V_{\eta,\alpha}(s)+A_{\eta,\beta}(s,a)-\max_{a^{\prime}}A_{\eta,\beta}\begin{pmatrix}s,a^{\prime}\end{pmatrix}
+$$
+
+
+
+* 减去平均优势值：$\sum_{a^\prime}(A(s,a^\prime;\theta,\alpha)-\frac{1}{|\mathcal{A}|}\sum_{a^{\prime\prime}}A(s,a^{\prime\prime};\theta,\alpha))=0$ 将优势值相对于他们的平均值进行中心化，消除了A(s, a)中的任意常数偏移，从而V(s)能够唯一地表示状态的真实价值。$V(s)=\frac{1}{|\mathcal{A}|}\sum_{a^{\prime}}Q(s,a^{\prime})$
+
+$$
+Q_{\eta,\alpha,\beta}(s,a)=V_{\eta,\alpha}(s)+A_{\eta,\beta}(s,a)-\frac{1}{|\mathcal{A}|}\sum_{a^{\prime}}A_{\eta,\beta}\left(s,a^{\prime}\right)
+$$
+
+
+
+
+
+
+
+# Deep Reforcement Learning
+
+[CS 285: Lecture 1, Introduction. Part 2](https://www.youtube.com/watch?v=BYh36cb92JQ&list=PL_iWQOsE6TfVYGEGiAOMaOzzv41Jfm_Ps&index=2)
+
+[berkeleydeeprlcourse/homework_fall2023](https://github.com/berkeleydeeprlcourse/homework_fall2023)
+
+## Chapter 1 Intro
