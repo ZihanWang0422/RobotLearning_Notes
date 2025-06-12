@@ -4,6 +4,8 @@
 
 [蘑菇书EasyRL](https://datawhalechina.github.io/easy-rl/#/)
 
+[动手学强化学习](https://hrl.boyuai.com/)
+
 ## Chapter 1 Intro
 
 ![alt text](./Reinforcement Learning.assets/image-1-1745210399731-2.png)
@@ -1625,6 +1627,139 @@ $$
 $$
 Q_{\eta,\alpha,\beta}(s,a)=V_{\eta,\alpha}(s)+A_{\eta,\beta}(s,a)-\frac{1}{|\mathcal{A}|}\sum_{a^{\prime}}A_{\eta,\beta}\left(s,a^{\prime}\right)
 $$
+
+
+
+## Chapter 7 策略梯度算法
+
+**基于策略的方法：直接显式地学习一个目标策略**
+
+### 7.1 策略梯度
+
+1. 假设目标策略$\pi_{\theta}$是一个随机性策略，且处处可微，其中$\theta$是对应的参数，可以用一个线性模型或神经网络模型来为其建模：输入某个状态，输出一个动作的概率分布，目标是寻找一个最优策略并最大化这个策略在环境中的期望回报（S0表示初始状态）
+
+
+$$
+J(\theta)=\mathbb{E}_{s_0}[V^{\pi_\theta}(s_0)]
+$$
+
+2. 梯度上升：将目标函数对$\theta$求导，从而使用**梯度上升**方法来最大化目标函数(等价于让策略更多地去采样到带来较高Q值的动作)，从而得到最优策略
+
+$$
+\begin{aligned}\nabla_\theta J(\theta)&\propto\sum_{s\in S}\nu^{\pi_\theta}(s)\sum_{a\in A}Q^{\pi_\theta}(s,a)\nabla_\theta\pi_\theta(a|s)\\&=\sum_{s\in S}\nu^{\pi_\theta}(s)\sum_{a\in A}\pi_\theta(a|s)Q^{\pi_\theta}(s,a)\frac{\nabla_\theta\pi_\theta(a|s)}{\pi_\theta(a|s)}\\&=\mathbb{E}_{\pi_\theta}[Q^{\pi_\theta}(s,a)\nabla_\theta\log\pi_\theta(a|s)]\end{aligned}
+$$
+
+3. 在线策略算法：上式中期望E的下标为$\pi_{\theta}$，故必须使用当前策略$\pi_{\theta}$采样得到的数据来计算梯度。
+
+4. Reinforce算法：使用蒙特卡洛算法估计$Q^{\pi_\theta}(s,a)$
+
+
+
+
+
+### 7.2 Reinforce算法
+
+1. 计算策略梯度：
+
+对于一个有限步数的环境来说：
+$$
+\nabla_\theta J(\theta)=\mathbb{E}_{\pi_\theta}\left[\sum_{t=0}^T\left(\sum_{t^\prime=t}^T\gamma^{t^\prime-t}r_{t^\prime}\right)\nabla_\theta\log\pi_\theta(a_t|s_t)\right]
+$$
+其中，T是和环境交互的最大步数
+
+
+
+2. 算法流程：
+
+![image-20250605212801214](./Reinforcement Learning.assets/image-20250605212801214-1749130085324-1.png)
+
+
+
+
+
+3. 证明：
+
+![image-20250608000308889](./Reinforcement Learning.assets/image-20250608000308889.png)
+
+
+
+
+
+
+
+## Chapter 8 Actor-Critic 算法
+
+### 8.1 Actor-Critic
+
+1. Intro：
+
+本质是基于策略的算法，但会额外学习价值函数，从而帮助策略函数更好地学习。
+
+2. 梯度更新方式：
+
+将策略梯度写成如下形式：
+$$
+g=\mathbb{E}\left[\sum_{t=0}^T\psi_t\nabla_\theta\log\pi_\theta(a_t|s_t)\right]
+$$
+$\psi_t$形式如下：
+$$
+\begin{aligned}&1.\sum_{t^{\prime}=0}^T\gamma^{t^{\prime}}r_{t^{\prime}}:\text{轨迹的总回报;}\\&2.\sum_{t^{\prime}=t}^T\gamma^{t^{\prime}-t}r_{t^{\prime}}:\text{动作}a_t\text{之后的回报;}\\&3.\sum_{t^{\prime}=t}^T\gamma^{t^{\prime}-t}r_{t^{\prime}}-b(s_t):\text{基准线版本的改进;}\\&4.Q^{\pi_\theta}(s_t,a_t):\text{动作价值函数;}\\&5.A^{\pi_\theta}(s_t,a_t):\text{优势函数;}\\&6.r_t+\gamma V^{\pi_\theta}(s_{t+1})-V^{\pi_\theta}(s_t):\text{时序差分残差。}\end{aligned}
+$$
+(3) 由于REINFORCE通过蒙特卡洛采样方法对策略梯度的估计是无偏的，但是方差很大。可以引入基线函数b(st)来减小方差
+
+(4) 估计动作价值函数Q，代替蒙特卡洛采样得到的回报
+
+(5) 优势函数：将状态价值函数V作为基线，A  = Q - V
+
+(6) 时序差分残差：Q = r + γV
+
+
+
+3. 算法步骤：
+
+(1) Actor(策略网络): 与环境交互，并在Critic价值函数的指导下用**策略梯度**学习一个更好的策略。
+
+
+
+(2) Critic(价值网络): 通过 Actor 与环境交互收集的数据学习一个价值函数，这个价值函数会用于判断在当前状态什么动作是好的，什么动作不是好的，进而帮助 Actor 进行策略更新。
+
+更新方式：梯度下降更新Critic价值网络参数
+
+价值函数的损失函数：
+$$
+\mathcal{L}(\omega)=\frac{1}{2}(r+\gamma V_\omega(s_{t+1})-V_\omega(s_t))^2
+$$
+价值函数的梯度：将上述$r+\gamma V_\omega(s_{t+1})$作为时序差分目标，不会产生梯度来更新价值函数
+$$
+\nabla_\omega\mathcal{L}(\omega)=-(r+\gamma V_\omega(s_{t+1})-V_\omega(s_t))\nabla_\omega V_\omega(s_t)
+$$
+![image-20250608163218142](./Reinforcement Learning.assets/image-20250608163218142.png)
+
+## Chapter 9 TRPO 算法
+
+### 9.1 策略目标
+
+1. Intro
+
+Q:基于策略的方法沿着梯度去更新策略参数，但是当策略网络是深度模型，沿着策略梯度更新参数，会由于步长太长，策略显著变差，从而影响训练效果。
+
+在更新策略时找到一块信任区域，在这个区域上更新策略时能够得到某种策略性能的安全性保证
+
+
+
+2. 
+
+
+
+
+
+### 9.2
+
+
+
+
+
+
 
 
 

@@ -698,11 +698,77 @@ c. 改进措施：
 
 (2) RRT
 
+[全局路径规划：图搜索算法介绍4(RRT/RRT*)_双向rrt算法-CSDN博客](https://blog.csdn.net/gophae/article/details/103231053)
+
+1. 初始化整个空间，定义初始点、终点、采样点数、点与点之间的步长t等信息
+
+2. 在空间中随机产生一个点xrand
+
+3. 在已知树的点集合中找到距离这个随机点最近的点xnear
+
+4. 在xnear到xrand的直线方向上从xnear以步长t截取点xnew
+
+   <img src="./Motion Planning.assets/image-20250609171258527.png" alt="image-20250609171258527" style="zoom:50%;" />
+
+5. 判断从xnear到xnew之间是否存在障碍物，若存在则舍弃该点
+
+   <img src="./Motion Planning.assets/image-20250609171312764.png" alt="image-20250609171312764" style="zoom:50%;" />
+
+6. 将new点加入到树集合中
+
+7. 循环2~6，循环结束条件：有一个new点在终点的设定邻域内
+
 ![image-20250602162244435](./Motion Planning.assets/image-20250602162244435.png)
 
 
 
 #### 2. Optimal methods(RRT*)
+
+(1) 算法
+
+**每个节点增加一个属性distance_to_start，用于存储其到出发点的距离。**
+
+**每个节点选择父节点的时候，新节点的距离等于父节点的距离加上父节点到子节点的直线距离。**
+
+1. 初始化整个空间，定义初始点、终点、采样点数、点与点之间的步长t等信息
+
+2. 在空间中随机产生一个点x_rand
+
+3. 在已知树的点集合中找到距离这个随机点最近的点x_near
+
+4. 在x_near到x_rand的直线方向上从x_near以步长t截取点x_new(PS:x_near和x_new不会连接起来)
+
+5. 判断从x_near到x_new之间是否存在障碍物，若存在则舍弃该点
+
+6. rewrite: x_new加入树中后，重新选择父节点X_near，使其到起始点的代价更小
+
+   * 以x_new为半径搜索较近的可能父节点X_near
+
+   ![image-20250609172442182](./Motion Planning.assets/image-20250609172442182-1749461104157-2.png)
+
+   * 查看哪个节点到达start最短。图中new-near-start是最短的，new-x1-near-start和new-x2-near-start均比第一条路长。
+
+   ![image-20250609172520667](./Motion Planning.assets/image-20250609172520667-1749461122313-4.png)
+
+   * 添加点到集合中
+
+   ![image-20250609173840725](./Motion Planning.assets/image-20250609173840725-1749461929383-10.png)
+
+7. random relink: 对新节点x_new附近一定范围内的节点进行重连。重连就是，检查一下如果把x_new附近的这些节点的父节点设置为x_new，这些节点的代价会不会减小。如果能够减小，就把这些节点的父节点更改为x_new；否则，就不更改。
+
+   * 对x1来说，start-near-x1比start-near-new-x1的距离短，所以x1的父节点是near，不用修改。
+
+   ![image-20250609172601089](./Motion Planning.assets/image-20250609172601089-1749461162411-6.png)
+
+   * 对于x2来说，start-near-x1-x2比start-near-new-x2的距离长，所以修改x2的父节点为new。
+
+   ![image-20250609172612640](./Motion Planning.assets/image-20250609172612640-1749461174201-8.png)
+
+8. 循环2~7，循环结束条件：有一个new点在终点的设定邻域内
+
+
+
+<img src="./Motion Planning.assets/image-20250609113228112.png" alt="image-20250609113228112" style="zoom:150%;" />
 
 
 

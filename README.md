@@ -1,12 +1,14 @@
 # Robot Learning Note
 
-**Here are some links of  some course and blog lists about some awesome robotics algorithms**
+**Here are some links of  some course and paper lists about some awesome robotics algorithms**
 
 https://zhuanlan.zhihu.com/p/340344248
 
 [Robots | Papers With Code](https://paperswithcode.com/area/robots)
 
- 
+ [‬⁠‬‬‌‍‌‍‬‌‍⁠⁠‬﻿‍⁠‬⁠全网最全具身智能知识库 - 飞书云文档](https://yv6uc1awtjc.feishu.cn/wiki/WPTzw9ON0ivIVrkLjVocNZh8nLf)
+
+
 
 
 ### 1、Robotics Basic：
@@ -63,7 +65,7 @@ VLN
 
 
 
-### 3、Planning
+### 3、[Motion Planning](Motion%20Planning.md)
 
 (1)Path finding:
 
@@ -81,6 +83,8 @@ State Lattice Search、Kinodynamic RRT* , Hybrid A*
 
 [移动机器人运动规划-第三章(基于采样的路径规划)-第一节(feasible path planning methods)_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1ZHPueWE4U?spm_id_from=333.788.player.switch&vd_source=41ecf2720f0aef9d6e7aadbcb46c655f)
 
+
+
 (2)Trajectory/Mapping:
 
 fast planner、ego planner
@@ -97,7 +101,13 @@ Navigation
 
 
 
-(4)Learning-based methods...
+(4)Learning-based methods
+
+VLN
+
+[复旦大学视觉语言导航研究重磅调研（后附下载链接）！](https://mp.weixin.qq.com/s/PgsLQ_GKdyN9-D2_zVx0rg)
+
+
 
 
 
@@ -123,7 +133,7 @@ Optimal Control
 
 
 
-### 5、Reinforcement Learning(Python):
+### 5、[Reinforcement Learning](Reinforcement%20Learning.md)
 
 (1)Classic algorithms: 
 
@@ -162,11 +172,13 @@ Diffusion policy、ACT、RT、RDT、GR
 
 
 
-### 7. VLM：
+### 7. RobotArm + VLM：
 
 VLA, Open-VLA, pi0, rdt, peract2, RT-1
 
 [ICLR2025 GenBot](https://genbot-workshop.github.io/)
+
+[微信公众平台](https://mp.weixin.qq.com/s?__biz=MzkyMTc1NTI3Ng==&mid=2247488481&idx=1&sn=32e7f13c00e77cd1554d2ae5747cb742&chksm=c0286604c5bc2a20aef8a26456fb5b6782e76a83f4ce3212cebbd2aae2d8a4134913039abaee&mpshare=1&scene=1&srcid=0605Blxapj7bmQuEbZueHzeS&sharer_shareinfo=ea47b0041967cbe6790c5f9a974751d1&sharer_shareinfo_first=ea47b0041967cbe6790c5f9a974751d1#rd)
 
 
 
