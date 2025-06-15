@@ -108,9 +108,9 @@ API: http://wiki.ros.org/joint_state_publisher
    </link>
    ```
 
-   ​
+   
 
-   ​
+   
 
 **simulation**
 
@@ -148,6 +148,20 @@ API: http://wiki.ros.org/joint_state_publisher
 [Isaac Lab](https://isaac-sim.github.io/IsaacLab/main/index.html)
 
 [Isaac Lab CN document](https://docs.robotsfan.com/isaaclab/index.html)
+
+
+
+
+
+
+
+⚠️读取USD过慢
+
+[【强化学习】Isaac Sim4.5将加载资源设为本地路径_issac sim4.5切换本地资源路径-CSDN博客](https://blog.csdn.net/qq_45906972/article/details/146095565)
+
+[【Isaac Lab】将加载资源设为本地路径_isaaclab从云端下载资源的文件配置在哪-CSDN博客](https://blog.csdn.net/qq_45906972/article/details/146094971)
+
+[Omniverse、Isaac Sim、Isaac Lab入门必会之 Nucleus 部署_nucleus navigator-CSDN博客](https://blog.csdn.net/Vulcan_S/article/details/140142933)
 
 
 

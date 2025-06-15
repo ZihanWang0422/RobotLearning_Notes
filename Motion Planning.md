@@ -4,6 +4,8 @@
 
 [MRPT](https://docs.mrpt.org/reference/latest/index.html)
 
+[The Open Motion Planning Library](https://ompl.kavrakilab.org/)
+
 [BorisVandermeer/DeepBlueCourses-PathingPlanning-Homework: 深蓝学院 - 高飞 - 运动规划课程作业](https://github.com/BorisVandermeer/DeepBlueCourses-PathingPlanning-Homework)
 
 ## Chapter 1 Mapping
@@ -778,6 +780,15 @@ c. 改进措施：
 
 #### 3. Accelerate convergence(RRT#, Informed RRT*, GuiLD)
 
+(1) RRT#
+
+
+
+(2) Informed RRT*
+
+
+
+(3) GuiLD
 
 
 
@@ -787,12 +798,13 @@ c. 改进措施：
 
 
 
-
-### 2.3
-
+### 2.3 Kinodynamic-based Method
 
 
-## Chapter 2 
+
+
+
+## Chapter 3
 
 
 
