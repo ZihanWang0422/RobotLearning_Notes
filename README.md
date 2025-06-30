@@ -130,6 +130,8 @@ Optimal Control
 
 [Optimal Control (CMU 16-745) 2024 Lecture 1: Intro and Dynamics Review](https://www.youtube.com/watch?v=Kj88Nory8ec&list=PLZnJoM76RM6Jv4f7E7RnzW4rijTUTPI4u)[CMU最优控制16-745超详细学习笔记 - 知乎](https://zhuanlan.zhihu.com/p/629131647)
 
+[Optimal-Control-16-745/lecture-notebooks-2023](https://github.com/Optimal-Control-16-745/lecture-notebooks-2023)
+
 
 
 
@@ -152,6 +154,8 @@ Diffusion policy、ACT、RT、RDT、GR
 [Welcome to Spinning Up in Deep RL! — Spinning Up documentation](https://spinningup.openai.com/en/latest/)
 
 
+
+[P3. Python学习中的两大法宝函数（当然也可以用在PyTorch）_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1hE411t7RN/?spm_id_from=333.788.videopod.episodes&vd_source=41ecf2720f0aef9d6e7aadbcb46c655f&p=4)
 
 ### 6. Simulator：
 
