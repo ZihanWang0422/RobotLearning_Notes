@@ -244,19 +244,51 @@ $r_\pi(s)=\sum_{a\in A}\pi(a\mid s)r(s,a)$
 
 Q函数（动作价值函数）：在某一个状态采取某一个动作，它有可能得到的回报的期望。
 
-$Q_\pi(s,a)=\mathbb{E}_\pi\left[G_t\mid s_t=s,a_t=a\right]$
-
+$$
+Q_\pi(s,a)=\mathbb{E}_\pi\left[G_t\mid s_t=s,a_t=a\right]
+$$
 价值函数：对Q函数中的动作进行加和。
 
-$V_\pi(s)=\mathbb{E}_\pi[G_t\mid s_t=s]=\sum_{a\in A}\pi(a\mid s)Q_\pi(s,a）$
-
+$$
+V_\pi(s)=\mathbb{E}_\pi[G_t\mid s_t=s]=\sum_{a\in A}\pi(a\mid s)Q_\pi(s,a）
+$$
 同理于MRP的价值函数推导，可得：
 
-$\begin{aligned}Q_\pi(s,a)=R(s,a)+\gamma\sum_{s^{\prime}\in S}p\left(s^{\prime}\mid s,a\right)V_\pi\left(s^{\prime}\right) \end{aligned}$
-
+$$
+\begin{aligned}Q_\pi(s,a)=R(s,a)+\gamma\sum_{s^{\prime}\in S}p\left(s^{\prime}\mid s,a\right)V_\pi\left(s^{\prime}\right) \end{aligned}
+$$
 得到贝尔曼期望方程：
 
-✨$V_\pi(s)=\sum_{a\in A}\pi(a\mid s)\left(R(s,a)+\gamma\sum_{s^{\prime}\in S}p\left(s^{\prime}\mid s,a\right)V_\pi\left(s^{\prime}\right)\right)$
+$$
+✨V_\pi(s)=\sum_{a\in A}\pi(a\mid s)\left(R(s,a)+\gamma\sum_{s^{\prime}\in S}p\left(s^{\prime}\mid s,a\right)V_\pi\left(s^{\prime}\right)\right)
+$$
+
+
+4. 状态访问分布
+
+假设MDP的初始状态分布为$v_{0}(s)$（该状态分布与策略无关），$P_t^{\pi}$表示**采取策略$\pi$使得智能体在t时刻状态为s的概率**:考虑Markov性$P_t^\pi=\sum_{s_0\subset v_0(s)}pr[s_0\to s|t,\pi]$，其中$pr[s_0\to s|t,\pi]$表示**在策略$\pi$下经过t步转移到相应状态的概率**，定义**一个策略的状态访问分布(表示在策略$\pi$下，状态s的长期访问概率)**：
+$$
+✨v^\pi(s)=(1-\gamma)\sum_{t=0}^\infty\gamma^tP_t^\pi
+$$
+(其中$1-\gamma$为归一化因子，使得**所有状态的状态访问分布的和为1)
+
+🙌推导：
+
+对所有状态s求和：
+$$
+\sum_{s\in S}v^{\pi}(s)=\sum_{s\in S}(1-\gamma)\sum_{t=0}^{\infty}\gamma^{t}P_{t}^{\pi}(s)
+$$
+根据概率的基本性质，对于任意时刻t，所有状态的概率之和为1，即$\sum_{s\in s}P_{t}^{n}(s)=1$
+$$
+\begin{aligned}\sum_{s\in S}v^{\pi}(s)&=\sum_{s\in S}(1-\gamma)\sum_{t=0}^{\infty}\gamma^{t}P_{t}^{\pi}(s)\\&=(1-\gamma)\sum_{t=0}^{\infty}\gamma^{t}\sum_{s\in s}P_{t}^{\pi}(s)\\&=(1-\gamma)\sum_{t=0}^{\infty}\gamma^{t}\\&=(1-\gamma)\frac{1}{1-\gamma}\\&=1\end{aligned}
+$$
+
+
+
+
+
+
+
 
 
 
@@ -1318,7 +1350,7 @@ print_agent(agent, env, action_meaning, list(range(37, 47)), [47])
 
 ## Chapter 5 Dyna-Q Algorithm
 
-### 4.1  Dyna-Q(基于模型) 
+### 5.1  Dyna-Q(基于模型) 
 
 1. 算法：
 
@@ -1466,7 +1498,17 @@ plt.show()
 
 
 
-##  Chapter 6 DQN Algorithm
+# Deep Reforcement Learning
+
+[CS 285: Lecture 1, Introduction. Part 2](https://www.youtube.com/watch?v=BYh36cb92JQ&list=PL_iWQOsE6TfVYGEGiAOMaOzzv41Jfm_Ps&index=2)
+
+[berkeleydeeprlcourse/homework_fall2023](https://github.com/berkeleydeeprlcourse/homework_fall2023)
+
+[Welcome to Spinning Up in Deep RL! — Spinning Up documentation](https://spinningup.openai.com/en/latest/)
+
+## 
+
+## Chapter 6 DQN Algorithm
 
 ### 6.1 DQN
 
@@ -1643,7 +1685,7 @@ $$
 J(\theta)=\mathbb{E}_{s_0}[V^{\pi_\theta}(s_0)]
 $$
 
-2. 梯度上升：将目标函数对$\theta$求导，从而使用**梯度上升**方法来最大化目标函数(等价于让策略更多地去采样到带来较高Q值的动作)，从而得到最优策略
+2. 梯度上升：将目标函数对$\theta$求导，从而使用**梯度上升**从而找到$\theta^*=\arg\max_\theta J(\theta)$来最大化目标函数(等价于让策略更多地去采样到带来较高Q值的动作)，从而得到最优策略
 
 $$
 \begin{aligned}\nabla_\theta J(\theta)&\propto\sum_{s\in S}\nu^{\pi_\theta}(s)\sum_{a\in A}Q^{\pi_\theta}(s,a)\nabla_\theta\pi_\theta(a|s)\\&=\sum_{s\in S}\nu^{\pi_\theta}(s)\sum_{a\in A}\pi_\theta(a|s)Q^{\pi_\theta}(s,a)\frac{\nabla_\theta\pi_\theta(a|s)}{\pi_\theta(a|s)}\\&=\mathbb{E}_{\pi_\theta}[Q^{\pi_\theta}(s,a)\nabla_\theta\log\pi_\theta(a|s)]\end{aligned}
@@ -1735,7 +1777,11 @@ $$
 $$
 ![image-20250608163218142](./Reinforcement Learning.assets/image-20250608163218142.png)
 
+
+
 ## Chapter 9 TRPO 算法
+
+由于策略的改变导致数据分布的改变，这大大影响深度模型实现的策略网络的学习效果，所以通过划定一个可信任的策略学习区域，保证策略学习的稳定性和有效性。
 
 ### 9.1 策略目标
 
@@ -1747,13 +1793,130 @@ Q:基于策略的方法沿着梯度去更新策略参数，但是当策略网络
 
 
 
-2. 
+2. 策略目标：
+
+(1) 假设当前策略为$\pi_{\theta}$，参数为$\theta$，那么优化的目标为借助当前的$\theta$找到一个更优的参数$\theta^{\prime}$，使得$J(\theta^{\prime})\geq J(\theta)$。由于初始状态S0的分布与策略无关，因此上述策略$\pi_{\theta}$下的优化目标$J(\theta)$可以写成在新策略$\pi_{\theta^{\prime}}$的期望形式
+$$
+\begin{aligned}J(\theta)&=\mathbb{E}_{s_0}[V^{\pi_\theta}(s_0)]\\&=\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^tV^{\pi_\theta}(s_t)-\sum_{t=1}^\infty\gamma^tV^{\pi_\theta}(s_t)\right]\\&=-\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^t\left(\gamma V^{\pi_\theta}(s_{t+1})-V^{\pi_\theta}(s_t)\right)\right]\end{aligned}
+$$
+新旧策略的目标函数差距：
+$$
+\begin{aligned}J(\theta^{\prime})-J(\theta)&=\mathbb{E}_{s_0}\left[V^{\pi_{\theta^{\prime}}}(s_0)\right]-\mathbb{E}_{s_0}\left[V^{\pi_\theta}(s_0)\right]\\&=\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^tr(s_t,a_t)\right]+\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^t\left(\gamma V^{\pi_\theta}(s_{t+1})-V^{\pi_\theta}(s_t)\right)\right]\\&=\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^t\left[r(s_t,a_t)+\gamma V^{\pi_\theta}(s_{t+1})-V^{\pi_\theta}(s_t)\right]\right]\\&=\mathbb{E}_{\pi_{\theta^{\prime}}}\left[\sum_{t=0}^\infty\gamma^tA^{\pi_\theta}(s_t,a_t)\right](将时序差分残差定义为优势函数A)\\&=\sum_{t=0}^\infty\gamma^t\mathbb{E}_{s_t\sim P_t^{\pi_{\theta^{\prime}}}}\mathbb{E}_{a_t\sim\pi_{\theta^{\prime}}(\cdot|s_t)}\left[A^{\pi_\theta}(s_t,a_t)\right]\\&=\frac{1}{1-\gamma}\mathbb{E}_{s\sim\nu^{\pi_{\theta^{\prime}}}}\mathbb{E}_{a\sim\pi_{\theta^{\prime}}(\cdot|s)}\left[A^{\pi_\theta}(s,a)\right]\end{aligned}
+$$
+(最后一个等号由状态空间的访问分布得到，所以只需要找到一个新策略，使得$\mathbb{E}_{s\sim\nu^{\pi_{\theta^{\prime}}}}\mathbb{E}_{a\sim\pi_{\theta^{\prime}}(\cdot|s)}\left[A^{\pi_{\theta}}(s,a)\right]\geq0$就能保证策略性单调递增，即$J(\theta^{\prime})\geq J(\theta)$)
+
+
+
+(2) 近似处理：
+
+当新旧策略非常接近时，状态访问分布变化很小，可以近似忽略，直接采用旧的策略$\pi_{\theta}$的状态分布，定义如下替代优化目标：
+$$
+L_\theta(\theta^{\prime})=J(\theta)+\frac{1}{1-\gamma}\mathbb{E}_{s\sim\nu^{\pi_\theta}}\mathbb{E}_{a\sim\pi_{\theta^{\prime}}(\cdot|s)}\left[A^{\pi_\theta}(s,a)\right]
+$$
+用重要性采样对动作分布进行处理:
+$$
+L_\theta(\theta^{\prime})=J(\theta)+\mathbb{E}_{s\sim\nu^{\pi_\theta}}\mathbb{E}_{a\sim\pi_\theta(\cdot|s)}\left[\frac{\pi_{\theta^{\prime}}(a|s)}{\pi_\theta(a|s)}A^{\pi_\theta}(s,a)\right]
+$$
+接下来基于旧策略$\pi_{\theta}$已经采样出来的数据来估计并优化新策略$\pi_{\theta^{\prime}}$；为了保证新旧策略足够接近，使用Kullback-Leibler散度来衡量策略之间的距离，并给出了整体的优化公式：
+$$
+\begin{aligned}&\max_{\theta^{\prime}}L_{\theta}(\theta^{\prime})\\&\mathrm{s.t.}\mathbb{E}_{s\sim\nu^{\pi_{\theta_{k}}}}[D_{KL}(\pi_{\theta_{k}}(\cdot|s),\pi_{\theta^{\prime}}(\cdot|s))]\leq\delta\end{aligned}
+$$
+由上述不等式，定义了策略空间的一个KL球—信任区域。在该区域内，可以认为当前学习策略和环境交互的状态分布与上一轮策略最后采样的状态分布一致，进而可以基于一步行动的重要性采样方法使当前学习策略稳定提升。
+
+![image-20250703233710192](./Reinforcement Learning.assets/image-20250703233710192.png)
+
+
+
+### 9.2 算法优化
+
+#### 1.近似求解
+
+做了一步近似操作，用$\theta_k$代替$\theta$(表示第k次迭代后的策略)，对目标和约束在$\theta_k$进行**泰勒展开**，分别用1阶和2阶进行近似：
+$$
+\mathbb{E}_{s\sim\nu^{\pi_{\theta_k}}}\mathbb{E}_{a\sim\pi_{\theta_k}(\cdot|s)}\left[\frac{\pi_{\theta^{\prime}}(a|s)}{\pi_{\theta_k}(a|s)}A^{\pi_{\theta_k}}(s,a)\right]\approx g^T(\theta^{\prime}-\theta_k)
+$$
+
+$$
+\mathbb{E}_{s\sim\nu^{\pi_{\theta_k}}}[D_{KL}(\pi_{\theta_k}(\cdot|s),\pi_{\theta^{\prime}}(\cdot|s))]\approx\frac{1}{2}(\theta^{\prime}-\theta_k)^TH(\theta^{\prime}-\theta_k)
+$$
+
+其中，$g=\nabla_{\theta^{\prime}}\mathbb{E}_{s\sim\nu}^{\pi_{\theta_k}}\mathbb{E}_{a\sim\pi_{\theta_k}(\cdot|s)}\left[\frac{\pi_{\theta^{\prime}}(a|s)}{\pi_{\theta_k}(a|s)}A^{\pi_{\theta_k}}(s,a)\right]$表示目标函数的梯度
+
+$H=\mathbf{H}[\mathbb{E}_{s\sim\nu^{\pi_{\theta_k}}}[D_{KL}(\pi_{\theta_k}(\cdot|s),\pi_{\theta^{\prime}}(\cdot|s))]$表示策略之前平均KL距离的黑塞矩阵（Hessian matrix）
+
+于是优化目标变成了KL距离约束条件：
+$$
+✨\theta_{k+1}=\underset{\theta^{\prime}}{\operatorname*{\operatorname*{\arg\max}}}g^T(\theta^{\prime}-\theta_k)\quad\mathrm{s.t.}\quad\frac{1}{2}(\theta^{\prime}-\theta_k)^TH(\theta^{\prime}-\theta_k)\leq\delta
+$$
+使用Karush-Kuhn-Tucker（KKT）条件直接导出上述问题的解：
+$$
+✨\theta_{k+1}=\theta_k+\sqrt{\frac{2\delta}{g^TH^{-1}g}}H^{-1}g
+$$
+
+
+#### 2. 共轭梯度
+
+假设满足KL距离约束的参数更新时的最大步长为$\beta$(步长为$\theta^{\prime}-\theta_k$)，根据KL距离约束条件，有$\frac{1}{2}(\beta x)^TH(\beta x)=\delta$，解出$\beta=\sqrt{\frac{2\delta}{x^{T}Hx}}$。此时参数更新方式为：
+$$
+✨\theta_{k+1}=\theta_k+\sqrt{\frac{2\delta}{x^THx}}x
+$$
+此时，直接计算$x=H^{-1}g$ (x为参数更新方向，H为正定矩阵 - 可以通过共轭梯度法求解)，即可更新参数。
+
+✨**共轭梯度法**
+
+<img src="./Reinforcement Learning.assets/image-20250705165508844.png" alt="image-20250705165508844" style="zoom: 67%;" />
+
+为了减小计算量，只需计算Hx向量，而不是直接计算和存储H矩阵，因为对任意的列向量v，可以验证下式，即先用梯度和向量v点乘后计算梯度：
+$$
+Hv=\nabla_\theta\left(\left(\nabla_\theta(D_{KL}^{\nu^{\pi_{\theta_k}}}(\pi_{\theta_k},\pi_{\theta^{\prime}}))\right)^T\right)v=\nabla_\theta\left(\left(\nabla_\theta(D_{KL}^{\nu^{\pi_{\theta_k}}}(\pi_{\theta_k},\pi_{\theta^{\prime}}))\right)^Tv\right)
+$$
+
+
+#### 3. 线性搜索
+
+TRPO在每次迭代的最后进行一次线性搜索，找到一个最小的非负整数i，使得按照
+$$
+\theta_{k+1}=\theta_k+\alpha^i\sqrt{\frac{2\delta}{x^THx}}x       \\\alpha\in(0,1) 决定线性搜索长度
+$$
+求出的$\theta_{k+1}$依然满足最初的KL散度限制，并且能够提升目标函数$L_{\theta_k}$
+
+
+
+✨**TRPO算法流程**
+
+![image-20250706000203119](./Reinforcement Learning.assets/image-20250706000203119.png)
+
+
+
+## Chapter 10 PPO
+
+### 10.1 PPO-惩罚
+
+用拉格朗日数乘法直接将KL散度的限制放进了目标函数中，从而变成了一个无约束的优化问题，在迭代的过程中不断更新KL散度前的系数：
+$$
+\arg\max_{\theta}\mathbb{E}_{s\sim\nu^{\pi_{\theta_k}}}\mathbb{E}_{a\sim\pi_{\theta_k}(\cdot|s)}\left[\frac{\pi_\theta(a|s)}{\pi_{\theta_k}(a|s)}A^{\pi_{\theta_k}}(s,a)-\beta D_{KL}[\pi_{\theta_k}(\cdot|s),\pi_\theta(\cdot|s)]\right]
+$$
+令$d_k=D_{KL}^{\nu^{\pi_{\theta_k}}}(\pi_{\theta_k},\pi_\theta)$，$\beta$(用于限制学习策略和之前一轮策略的差距)的更新规则如下：
+
+<img src="./Reinforcement Learning.assets/image-20250707001012933.png" alt="image-20250707001012933" style="zoom:67%;" />
 
 
 
 
 
-### 9.2
+### 10.2 PPO-截断
+
+在目标函数中进行限制，以保证新的参数和旧的参数差距不会太大：
+$$
+\arg\max_{\theta}\mathbb{E}_{s\sim\nu}\mathbb{E}_{a\sim\pi_{\theta_k}(\cdot|s)}\left[\min\left(\frac{\pi_\theta(a|s)}{\pi_{\theta_k}(a|s)}A^{\pi_{\theta_k}}(s,a),\mathrm{clip}\left(\frac{\pi_\theta(a|s)}{\pi_{\theta_k}(a|s)},1-\epsilon,1+\epsilon\right)A^{\pi_{\theta_k}}(s,a)\right)\right]
+$$
+其中$\operatorname{clip}(x,l,r):=\max(\min(x,r),l)$ 将x限制在[l, r]内。上式中$\epsilon$是一个超参数，表示进行截断的范围
+
+若$A^{\pi_{\theta_k}}(s,a)>0$，则这个动作的价值高于平均，最大化这个式子会增大$\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{k}}(a|s)}$，但不会让其超过$1-\epsilon$；
+
+若$A^{\pi_{\theta_k}}(s,a)<0$ ,则最大化这个式子会减小$\frac{\pi_{\theta}(a|s)}{\pi_{\theta_{k}}(a|s)}$，但不会让其超过$1-\epsilon$
+
+![image-20250707205522927](./Reinforcement Learning.assets/image-20250707205522927.png)
 
 
 
@@ -1767,10 +1930,4 @@ Q:基于策略的方法沿着梯度去更新策略参数，但是当策略网络
 
 
 
-# Deep Reforcement Learning
-
-[CS 285: Lecture 1, Introduction. Part 2](https://www.youtube.com/watch?v=BYh36cb92JQ&list=PL_iWQOsE6TfVYGEGiAOMaOzzv41Jfm_Ps&index=2)
-
-[berkeleydeeprlcourse/homework_fall2023](https://github.com/berkeleydeeprlcourse/homework_fall2023)
-
-## Chapter 1 Intro
+# Imitation Learning

@@ -11,6 +11,13 @@ https://zhuanlan.zhihu.com/p/340344248
 
 
 
+
+机器人工程师学习计划 - YY硕的文章 - 知乎
+https://zhuanlan.zhihu.com/p/22266788
+
+![image-20250705204647336](./README.assets/image-20250705204647336.png)
+
+
 ### 1、Robotics Basic：
 
 姿态表示和转换（欧拉角、四元数、旋转矩阵、SO3）
@@ -107,7 +114,7 @@ VLN
 
 [复旦大学视觉语言导航研究重磅调研（后附下载链接）！](https://mp.weixin.qq.com/s/PgsLQ_GKdyN9-D2_zVx0rg)
 
-
+![img](./README.assets/dc2fb951a2586263d81490bd28014fd81961034195.jpg@1052w_!web-dynamic.avif)
 
 
 
@@ -134,8 +141,9 @@ Optimal Control
 
 
 
-
 ### 5、[Reinforcement Learning](Reinforcement%20Learning.md)
+
+
 
 (1)Classic algorithms: 
 
@@ -151,11 +159,9 @@ Diffusion policy、ACT、RT、RDT、GR
 
 (3)DRL:
 
-[Welcome to Spinning Up in Deep RL! — Spinning Up documentation](https://spinningup.openai.com/en/latest/)
-
-
-
 [P3. Python学习中的两大法宝函数（当然也可以用在PyTorch）_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1hE411t7RN/?spm_id_from=333.788.videopod.episodes&vd_source=41ecf2720f0aef9d6e7aadbcb46c655f&p=4)
+
+
 
 ### 6. Simulator：
 
